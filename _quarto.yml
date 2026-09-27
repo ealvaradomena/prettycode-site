@@ -1,0 +1,48 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - index.qmd
+
+website:
+  title: "PrettyCode"
+  site-url: "https://ealvaradomena.github.io/prettycode-site/"
+  description: "PrettyCode improves the documentation and readability of R and Python scripts with a CLI, Codex Skill, and MCP server."
+  search: false
+  navbar:
+    pinned: true
+    left:
+      - text: "Examples"
+        href: index.qmd#examples
+      - text: "Interfaces"
+        href: index.qmd#interfaces
+      - text: "Safeguards"
+        href: index.qmd#safeguards
+      - text: "MCP demo"
+        href: index.qmd#mcp-demo
+      - text: "Get started"
+        href: index.qmd#get-started
+    right:
+      - text: "Source"
+        href: "https://github.com/ealvaradomena/prettycode-agent"
+      - icon: github
+        href: "https://github.com/ealvaradomena/prettycode-site"
+        aria-label: "Website source on GitHub"
+  page-footer:
+    left: "© <span data-current-year>2026</span> Edwin Alvarado-Mena, PhD"
+    center: "[AlvaradoCSS.com](https://alvaradocss.com/) <span class=\"footer-link-separator\"></span> [PolicyDataScience.com](https://policydatascience.com/)"
+    right: "Built with {{< iconify simple-icons:quarto size=sm label=\"\" style=\"margin:0 .14rem 0 .08rem;vertical-align:-.12rem;\" >}} Quarto and {{< iconify fa6-brands:r-project size=sm label=\"\" style=\"margin:0 .14rem 0 .08rem;vertical-align:-.12rem;\" >}} R"
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: false
+    smooth-scroll: true
+    code-copy: true
+    code-overflow: wrap
+    link-external-newwindow: true
+    include-after-body: footer-year.html
+
+execute:
+  enabled: false

@@ -1,0 +1,418 @@
+---
+title: "PrettyCode"
+page-layout: full
+title-block-style: none
+toc: false
+---
+
+::: {.hero}
+::: {.hero-inner}
+::: {.hero-copy}
+::: {.eyebrow}
+A SMALL TOOL FOR R & PYTHON
+:::
+
+# Your code. Easier to understand.
+
+Document and organize existing scripts without handing over your analysis. PrettyCode proposes readable changes and lets you review them before deciding what to keep.
+
+[Explore PrettyCode](https://github.com/ealvaradomena/prettycode-agent){.btn .btn-primary .hero-button} [Read the beginner's guide](https://github.com/ealvaradomena/prettycode-agent/blob/main/PRETTYCODE_BEGINNERS_GUIDE.md){.btn .btn-outline-secondary .hero-button}
+
+::: {.hero-note}
+Standalone CLI <span aria-hidden="true">·</span> Codex Skill <span aria-hidden="true">·</span> MCP server
+:::
+:::
+::: {.hero-visual aria-hidden="true"}
+<div class="workflow-preview">
+  <div class="workflow-title"><span class="workflow-dots">● ● ●</span><span>prettycode / workflow</span></div>
+  <div class="workflow-row"><span class="workflow-number">01</span><span>Read the original script</span><span class="workflow-check">✓</span></div>
+  <div class="workflow-row"><span class="workflow-number">02</span><span>Propose clearer code</span><span class="workflow-check">✓</span></div>
+  <div class="workflow-row"><span class="workflow-number">03</span><span>Validate &amp; show the diff</span><span class="workflow-check">✓</span></div>
+  <div class="workflow-footer"><span class="workflow-pulse"></span> You review before applying</div>
+</div>
+:::
+:::
+:::
+
+::: {.site-content}
+
+## See what changes {#examples}
+
+PrettyCode makes its value visible in the source file: explanatory comments, clearer organization, and a diff to review before accepting a change. These Iris examples are included in this website repository; each prepares data, visualizes a relationship, and fits a regression.
+
+### Python
+
+The Python example loads the Iris dataset, summarizes petal and sepal lengths by species, draws a scatter plot, and fits a linear regression. The *after* panel is the exact saved PrettyCode CLI proposal for `demo-inputs/iris.py`, generated with `gpt-5-mini`.
+
+::: {.comparison}
+::: {.comparison-panel}
+#### Before
+
+```python
+from sklearn.datasets import load_iris
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+iris = load_iris(as_frame=True)
+data = iris.frame.rename(columns={
+    "petal length (cm)": "petal_length",
+    "sepal length (cm)": "sepal_length",
+})
+data["species"] = data["target"].map(dict(enumerate(iris.target_names)))
+data = data[["species", "petal_length", "sepal_length"]].dropna()
+print(data.groupby("species")[["petal_length", "sepal_length"]].mean().round(2))
+
+for species, group in data.groupby("species"):
+    plt.scatter(group["petal_length"], group["sepal_length"], label=species)
+plt.xlabel("Petal length (cm)")
+plt.ylabel("Sepal length (cm)")
+plt.legend()
+plt.show()
+
+model = LinearRegression().fit(data[["petal_length"]], data["sepal_length"])
+print("Intercept:", model.intercept_, "Slope:", model.coef_[0])
+```
+:::
+::: {.comparison-panel}
+#### After
+
+```python
+# ////////////////////////////////////////////////////
+#
+# Project Setup
+#
+# Purpose
+# - Load the classic Iris dataset, prepare a small table with
+#   species, petal length, and sepal length, display group means,
+#   plot petal vs sepal length by species, and fit a simple linear
+#   regression predicting sepal length from petal length
+#
+# Requirements
+# - scikit-learn
+# - matplotlib
+#
+# AI Disclosure
+# - Code documentation and formatting assisted by ChatGPT
+# - Editing guidance: PrettyCode Python protocol
+#
+# ////////////////////////////////////////////////////
+
+# 1. Imports ----
+from sklearn.datasets import load_iris
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+
+# 2. Load and prepare data ----
+
+# Load the iris dataset as a pandas DataFrame (scikit-learn provides as_frame)
+iris = load_iris(as_frame=True)
+
+# Rename lengthy column names to shorter, snake_case names for clarity
+data = iris.frame.rename(
+    columns={
+        "petal length (cm)": "petal_length",
+        "sepal length (cm)": "sepal_length",
+    }
+)
+
+# Map numeric target codes to human-readable species names
+# - iris.target_names contains the species labels in order
+data["species"] = data["target"].map(dict(enumerate(iris.target_names)))
+
+# Keep only the columns we need for analysis and drop any missing rows
+data = data[["species", "petal_length", "sepal_length"]].dropna()
+
+# 3. Summary statistics ----
+
+# Print mean petal and sepal lengths for each species (rounded to 2 decimals)
+print(data.groupby("species")[["petal_length", "sepal_length"]].mean().round(2))
+
+# 4. Visualization ----
+
+# Scatter plot of petal length vs sepal length, colored by species
+for species, group in data.groupby("species"):
+    plt.scatter(group["petal_length"], group["sepal_length"], label=species)
+
+# Label axes, show legend, and display the figure
+plt.xlabel("Petal length (cm)")
+plt.ylabel("Sepal length (cm)")
+plt.legend()
+plt.show()
+
+# 5. Simple linear regression ----
+
+# Fit a linear model predicting sepal length from petal length
+model = LinearRegression().fit(data[["petal_length"]], data["sepal_length"])
+
+# Print model parameters (intercept and slope)
+print("Intercept:", model.intercept_, "Slope:", model.coef_[0])
+```
+:::
+:::
+
+### R
+
+The R example summarizes the built-in Iris data by species, visualizes petal and sepal lengths with ggplot2, and fits a linear model. The *after* panel is the exact saved PrettyCode CLI proposal for `demo-inputs/iris.R`, generated with `gpt-5-mini`.
+
+::: {.comparison}
+::: {.comparison-panel}
+#### Before
+
+```r
+library(ggplot2)
+
+data <- na.omit(iris[c("Species", "Petal.Length", "Sepal.Length")])
+print(aggregate(cbind(Petal.Length, Sepal.Length) ~ Species, data = data, FUN = mean))
+
+plot <- ggplot(data, aes(Petal.Length, Sepal.Length, color = Species)) +
+  geom_point() +
+  labs(x = "Petal length (cm)", y = "Sepal length (cm)") +
+  theme_minimal()
+print(plot)
+
+model <- lm(Sepal.Length ~ Petal.Length, data = data)
+print(coef(model))
+```
+:::
+::: {.comparison-panel}
+#### After
+
+```r
+# ////////////////////////////////////////////////////
+#
+#
+# Project Setup
+#
+# Purpose:
+# - Demonstrate a small analysis of the built-in iris dataset
+# - Prepare a cleaned sample, print group summaries, produce a scatter plot, and fit a simple linear model
+#
+# Requirements:
+# - The ggplot2 package must be installed
+# - The base R 'iris' dataset is used (no external files required)
+#
+# AI Disclosure:
+# - Code documentation and formatting assisted by ChatGPT
+# - Editing guidance: PrettyCode R protocol
+#
+# ////////////////////////////////////////////////////
+
+library(ggplot2)
+
+# ////////////////////////////////////////////////////
+#
+#
+# 1. Prepare Data ----
+#
+#
+# ////////////////////////////////////////////////////
+
+# Load a subset of the iris dataset and drop any rows with missing values
+data <- na.omit(
+  iris[c("Species", "Petal.Length", "Sepal.Length")]
+)
+
+# ////////////////////////////////////////////////////
+#
+#
+# 2. Summary Aggregation ----
+#
+#
+# ////////////////////////////////////////////////////
+
+# Compute and print mean Petal.Length and Sepal.Length by Species
+# Aggregation uses the base stats::aggregate behavior
+print(
+  aggregate(
+    cbind(Petal.Length, Sepal.Length) ~ Species,
+    data = data,
+    FUN = mean
+  )
+)
+
+# ////////////////////////////////////////////////////
+#
+#
+# 3. Visualization ----
+#
+#
+# ////////////////////////////////////////////////////
+
+# Create a scatter plot of Petal.Length vs Sepal.Length colored by Species
+plot <- ggplot2::ggplot(
+  data,
+  ggplot2::aes(Petal.Length, Sepal.Length, color = Species)
+) +
+  ggplot2::geom_point() +
+  ggplot2::labs(
+    x = "Petal length (cm)",
+    y = "Sepal length (cm)"
+  ) +
+  ggplot2::theme_minimal()
+
+# Print the ggplot object so it renders in interactive sessions
+print(plot)
+
+# ////////////////////////////////////////////////////
+#
+#
+# 4. Modeling ----
+#
+#
+# ////////////////////////////////////////////////////
+
+# Fit a simple linear model predicting Sepal.Length from Petal.Length
+model <- lm(Sepal.Length ~ Petal.Length, data = data)
+
+# Print the model coefficients (intercept and slope)
+print(coef(model))
+# FINAL OUTPUT LINE
+```
+:::
+:::
+
+Both examples carry out the same broad workflow in their respective languages: prepare Iris measurements, summarize them by species, visualize their relationship, and fit a simple regression. The panels preserve the exact originals and saved proposals; they are not a guarantee of behavioral equivalence.
+
+## Three interfaces {#interfaces}
+
+Choose the interface that fits how you work. All three belong to the same PrettyCode application; they are not three separate products.
+
+::: {.feature-grid}
+::: {.feature-card}
+### 01 · Codex Skill
+
+Instructions and R/Python editing protocols that Codex can follow in any project. The Skill works on its own without the CLI or MCP.
+
+[Install the Skill](https://github.com/ealvaradomena/prettycode-agent#install-the-skill-once-for-all-projects)
+:::
+::: {.feature-card}
+### 02 · Standalone CLI
+
+A terminal interface for discovering files, checking syntax, and requesting model-generated proposals. AI-assisted polishing uses the OpenAI API and may incur a charge.
+
+[Use the CLI](https://github.com/ealvaradomena/prettycode-agent#setup-windows-and-macos)
+:::
+::: {.feature-card}
+### 03 · MCP server
+
+Five local tools let compatible AI clients list, read, validate, inspect, and apply code changes. The client supplies the AI; the server makes no model requests.
+
+[Configure MCP](https://github.com/ealvaradomena/prettycode-agent#optional-mcp-integration)
+:::
+:::
+
+**Using them together:** The Skill tells Codex *how to edit*; MCP gives it *tools for inspecting and applying edits*. Codex can use both, but neither requires the other.
+
+## Preview, validate, decide {#safeguards}
+
+::: {.steps}
+**1. Inspect** — Read the existing code and propose readability-focused edits.
+
+**2. Validate** — Python changes pass parsing and an executable-token guard; R changes pass parsing. Neither check executes the user's scripts.
+
+**3. Review** — Inspect the diff. CLI proposals preview by default; MCP separates proposal inspection from application.
+:::
+
+::: {.limits}
+**Important limitation:** Valid syntax and unchanged Python executable tokens are safeguards, not proof that behavior is identical. Review proposed edits, especially for R, before applying them.
+:::
+
+## MCP in practice {#mcp-demo}
+
+A separate, real test used the earlier two-line Python example (`demo-inputs/example.py`), not the Iris script above. Codex proposed the edit; PrettyCode MCP inspected and applied it.
+
+::: {.mcp-flow}
+::: {.mcp-stage}
+::: {.mcp-stage-number aria-hidden="true"}
+01
+:::
+::: {.mcp-stage-body}
+### Discover
+
+::: {.mcp-stage-label}
+ASK CODEX
+:::
+
+> Use PrettyCode MCP to list the Python files in this project. Do not modify anything.
+
+::: {.mcp-stage-label}
+MCP RESPONSE
+:::
+
+`list_code_files` found `demo-inputs/example.py`. No changes made.
+:::
+:::
+
+::: {.mcp-stage}
+::: {.mcp-stage-number aria-hidden="true"}
+02
+:::
+::: {.mcp-stage-body}
+### Inspect
+
+::: {.mcp-stage-label}
+ASK CODEX
+:::
+
+> Use PrettyCode MCP to improve demo-inputs/example.py. Show the validated diff. Don't modify files.
+
+::: {.mcp-stage-label}
+MCP RESPONSE
+:::
+
+`read_code_file` → `inspect_proposal`
+
+**Passed:** Python syntax and executable-token guard. A diff was returned; the source stayed unchanged.
+:::
+:::
+
+::: {.mcp-stage}
+::: {.mcp-stage-number aria-hidden="true"}
+03
+:::
+::: {.mcp-stage-body}
+### Apply & verify
+
+::: {.mcp-stage-label}
+ASK CODEX
+:::
+
+> Apply the inspected change using PrettyCode MCP. Verify the result.
+
+::: {.mcp-stage-label}
+MCP RESPONSE
+:::
+
+`apply_proposal` → `read_code_file` → `validate_code_file`
+
+**Passed:** The saved file matched the inspected proposal; post-apply Python syntax was valid.
+:::
+:::
+:::
+
+::: {.mcp-takeaway}
+::: {.mcp-takeaway-title}
+**✓ Verified in a separate working directory**
+:::
+
+Inspection changed zero files. Application occurred only after a separate instruction; the saved file matched the reviewed proposal.
+:::
+
+*Validation checks did not execute the Python script or prove behavioral equivalence.*
+
+## Get started {#get-started}
+
+You can try free checks before enabling model-assisted edits. The application repository includes both example scripts and step-by-step installation instructions for Windows and macOS.
+
+```bash
+# In a locally installed PrettyCode environment:
+
+prettycode check examples/example.py
+prettycode check examples/example.R  # requires Rscript
+```
+
+[Installation and source code](https://github.com/ealvaradomena/prettycode-agent){.btn .btn-primary .hero-button} [Beginner's guide](https://github.com/ealvaradomena/prettycode-agent/blob/main/PRETTYCODE_BEGINNERS_GUIDE.md){.btn .btn-outline-secondary .hero-button}
+
+This is a static showcase. It does not upload, execute, or process visitors' code.
+
+:::

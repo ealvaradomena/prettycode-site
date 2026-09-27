@@ -1,0 +1,19 @@
+# Rendered site and local Quarto/RStudio state
+_site/
+.quarto/
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+**/*.quarto_ipynb
+
+# Local output, archived backups, and non-public CLI proposals
+Rplots.pdf
+old/
+.prettycode-proposals/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+/.quarto/

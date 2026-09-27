@@ -1,0 +1,13 @@
+<script>
+// Update after Quarto has inserted the footer into the document.
+function updateFooterYear() {
+  document.querySelectorAll('[data-current-year]').forEach((node) => {
+    node.textContent = String(new Date().getFullYear());
+  });
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', updateFooterYear);
+} else {
+  updateFooterYear();
+}
+</script>
